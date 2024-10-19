@@ -1,53 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
 function Home() {
-  const componentStyle = {
-    fontFamily: 'PT Sans, sans-serif',
-    color: '#65A0FB',
-    fontSize: '50x',
-  };
-
-  const teamNameList = [
-    "Alpha One",
-    "Meth",
-    "Team Sahil",
-    "Bombastic",
-    "BingeWatch",
-    "Non-Metallica",
-    "Fukrey",
-    "LiLiLarks",
-    "Team DCP",
-    "Team JNL",
-    "BACKSHOTS",
-    "THE JIGSAW's",
-    "Quad Squad",
-    "ALPHA Q",
-    "Discarded Retardeds",
-    "Trackers",
-    "VIT Falcons",
-    "Nexus",
-    "Deadpool",
-    "Unaborted 4",
-    "Winners",
-    "Knee grow",
-    "NoShitSherlock",
-    "Pesa",
-    "Momo",
-    "Hustlers",
-    "Clueless",
-    "Diamond 1",
-    "Knightmares",
-    "Teen Titans",
-    "Team Kryptonite",
-    "Niggamons",
-    "Valhalla",
-    "Team Hell",
-    "Gang314",
-    "POTASS",
-    "Insidious"
-]; //TEAM NAMES ACCORDING TO REGISTRATION, MANUALLY UPDATED
   const [teamScores, setTeamScores] = useState({});
   const [sortedObject, setSortedObject] = useState({});
+
+  const teamNameList = [
+    "Alpha One", "Meth", "Team Sahil", "Bombastic", "BingeWatch", 
+    "Non-Metallica", "Fukrey", "LiLiLarks", "Team DCP", "Team JNL",
+    "BACKSHOTS", "THE JIGSAW's", "Quad Squad", "ALPHA Q", 
+    "Discarded Retardeds", "Trackers", "VIT Falcons", "Nexus", 
+    "Deadpool", "Unaborted 4", "Winners", "Knee grow", 
+    "NoShitSherlock", "Pesa", "Momo", "Hustlers", "Clueless", 
+    "Diamond 1", "Knightmares", "Teen Titans", "Team Kryptonite", 
+    "Niggamons", "Valhalla", "Team Hell", "Gang314", "POTASS", 
+    "Insidious"
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,23 +22,14 @@ function Home() {
       for (let index = 0; index < teamNameList.length; index++) {
         const teamName = teamNameList[index];
         await fetch("https://api.counterapi.dev/v1/round1_GameFlix20/" + teamName)
+          .then((res) => res.json())
           .then((res) => {
-            return res.json();
-          })
-          .then((res) => {
-            console.log(res);
-            if(res.code == 400){
-              data[teamName] = 0;
-             } 
-            else{
-              data[teamName] = res.count;
-            }
+            data[teamName] = res.code === 400 ? 0 : res.count;
           })
           .catch(() => {
             data[teamName] = 0; // Set score to 0 if there's an error
           });
       }
-
       setTeamScores(data);
     };
 
@@ -89,47 +47,86 @@ function Home() {
     const sortedObject = Object.fromEntries(sortedArray);
     setSortedObject(sortedObject);
   }, [teamScores]);
-
+  const getAccentColor = (index) => {
+    const colors = ['#FFD700', '#C0C0C0', '#CD7F32', '#4169E1', '#32CD32', '#FF69B4', '#9370DB', '#00CED1'];
+    return colors[index % colors.length];
+  };
   return (
-    <div style={componentStyle}>
-      <nav className="navbar navbar-expand-lg navbar-dark" style={{ background: 'linear-gradient(to right, rgba(101, 160, 251), rgba(62, 125, 255))', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
+    <div style={{ fontFamily: 'PT Sans, sans-serif', color: '#333', backgroundColor: '#f4f7fc', minHeight: '100vh', width:'100vw' }}>
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-light" style={{ backgroundColor: 'rebeccapurple' }}>
         <div className="container">
-          <a href="/" className="navbar-brand" style={{ color: "white" }}>
+          <a href="/" className="navbar-brand" style={{ color: "#fff", fontWeight: 'bold' }}>
             <img src='./images/clublogo.png' style={{ height: "40px", width: "170px" }} alt="Logo" />
           </a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li className="nav-item mx-3"><a className="nav-link" style={{ fontWeight: "bold", color: "white" }}>iOS Club Website</a></li>
-              <li className="nav-item mx-3"><a className="nav-link" style={{ fontWeight: "bold", color: "white" }}>About</a></li>
-              <li className="nav-item mx-3"><a className="nav-link" style={{ fontWeight: "bold", color: "white" }}>Contact</a></li>
-              <li className="nav-item mx-3"><a className="nav-link" style={{ fontWeight: "bold", color: "white" }}>Support</a></li>
+          <div className="collapse navbar-collapse" id="navbarContent">
+            <ul className="navbar-nav ms-auto">
+              <li className="nav-item"><a className="nav-link text-white">Home</a></li>
+              <li className="nav-item"><a className="nav-link text-white">About</a></li>
+              <li className="nav-item"><a className="nav-link text-white">Contact</a></li>
+              <li className="nav-item"><a className="nav-link text-white">Support</a></li>
             </ul>
-            <div className="ms-auto">
-              <button type="button" className="btn btn-primary" style={{ borderRadius: "20px", backgroundColor: "#65A0FB", color: "white" }}>Leader Board</button>
-            </div>
+            <button className="btn btn-primary" style={{ backgroundColor: '#fff', color: '#65A0FB', borderRadius: '20px' }}>Leaderboard</button>
           </div>
         </div>
       </nav>
-      <div style={{ position: 'relative', boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", minHeight: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-        <img src="images/hero-shape-1.svg" alt="" style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', objectFit: 'cover' }} />
-        <img src="images/hero-shape-2.svg" alt="" style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', objectFit: 'cover' }} />
-        <br />
-
-        <h4 style={{ fontWeight: "bold", color: "white", marginBottom: '40px' }}>Check your position on LeaderBoard</h4>
-        {Object.entries(sortedObject).map(([teamName, score], index) => (
-          <div className="card mx-auto text-center" key={teamName} style={{ width: '18rem', borderRadius: "20px", boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
-            <div className="card-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <a href="#" className="btn btn-primary" style={{ borderRadius: "20px", fontFamily: 'PT Sans, sans-serif', margin: '10px', marginBottom: '20px' }}>
-                Position: {index + 1}
-              </a>
-              <h5 className="card-title" style={{ color: '#65A0FB', fontWeight: "bold" }}>{teamName}</h5>
-              <p className="card-text" style={{ fontFamily: 'PT Sans, sans-serif', fontWeight: "bold", marginBottom: '10px' }}>Score:{score}</p>
+      
+      {/* Leaderboard Section */}
+      <div style={{ margin: '0 auto', padding: '2rem' , backgroundColor:'black', minHeight:'100vh'}}>
+        <h2 style={{ textAlign: 'center', color: '#ffffff', marginBottom: '2rem', fontSize: '2rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Leaderboard</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem',placeItems:'center'  }}>
+          {Object.entries(sortedObject).map(([teamName, score], index) => (
+            <div key={teamName} style={{
+              backgroundColor: '#1a1a1a',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease',
+              border: '1px solid #333',
+              position: 'relative',
+              width:'17rem'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.boxShadow = `0 0 20px ${getAccentColor(index)}`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            >
+              <div style={{
+                backgroundColor: '#000000',
+                color: getAccentColor(index),
+                padding: '1rem',
+                textAlign: 'center',
+                fontSize: '2rem',
+                fontWeight: 'bold',
+                borderBottom: `2px solid ${getAccentColor(index)}`
+                
+              }}>
+                #{index + 1}
+              </div>
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', fontWeight: 'bold', color: '#ffffff' }}>{teamName}</h3>
+                <p style={{ 
+                  margin: '0', 
+                  fontSize: '1.8rem', 
+                  fontWeight: 'bold', 
+                  color: getAccentColor(index),
+                  textAlign: 'right',
+                  position: 'absolute',
+                  bottom: '1rem',
+                  right: '1rem',
+                }}>
+                  {score}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
